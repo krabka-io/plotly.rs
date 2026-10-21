@@ -19,8 +19,10 @@ env:
 jobs:
   rustfmt:
     name: Rustfmt
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
         with:
@@ -30,8 +32,10 @@ jobs:
 
   clippy:
     name: Clippy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@v4
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
@@ -59,8 +63,10 @@ jobs:
 
   semver:
     name: semver
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@v4
       - name: Check semver
         uses: obi1kenobi/cargo-semver-checks-action@v2
@@ -77,10 +83,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-26.04
             browser: chrome
             features: plotly_ndarray,plotly_image,static_export_default,debug
-          - os: ubuntu-latest
+          - os: ubuntu-26.04
             browser: firefox
             features: plotly_ndarray,plotly_image,static_export_geckodriver,static_export_wd_download,debug
           - os: windows-latest
@@ -92,6 +98,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: ${{ matrix.os == 'windows-latest' && 30 || 10 }}
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        if: runner.os == 'Linux'
+        shell: bash
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - name: Setup Chrome
         if: matrix.browser == 'chrome'
         uses: browser-actions/setup-chrome@v1
@@ -134,19 +144,19 @@ jobs:
 
       # Run tests on Ubuntu with Chrome
       - name: Run tests (${{ matrix.os }} - Chrome)
-        if: matrix.os == 'ubuntu-latest' && matrix.browser == 'chrome'
+        if: matrix.os == 'ubuntu-26.04' && matrix.browser == 'chrome'
         run: cargo test --workspace --features ${{ matrix.features }} --exclude plotly_kaleido
 
       # Install xvfb for Firefox WebGL support
       - name: Install xvfb
-        if: matrix.os == 'ubuntu-latest' && matrix.browser == 'firefox'
+        if: matrix.os == 'ubuntu-26.04' && matrix.browser == 'firefox'
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb
 
       # Run tests on Ubuntu with Firefox
       - name: Run tests (${{ matrix.os }} - Firefox)
-        if: matrix.os == 'ubuntu-latest' && matrix.browser == 'firefox'
+        if: matrix.os == 'ubuntu-26.04' && matrix.browser == 'firefox'
         run: |
           # Set environment variables for Firefox WebDriver
           export BROWSER_PATH="${{ steps.setup-firefox.outputs.firefox-path }}"
@@ -194,8 +204,10 @@ jobs:
 
   code-coverage:
     name: Code Coverage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -227,8 +239,10 @@ jobs:
           subplots,
           themes,
         ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@v4
 
       - name: Setup Chrome (for static_export)
@@ -247,8 +261,10 @@ jobs:
       fail-fast: false
       matrix:
         example: [basic, callback-example]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -257,8 +273,10 @@ jobs:
 
   build_book:
     name: Build Book 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@v4
 
       - name: Setup Chrome (for static_export)

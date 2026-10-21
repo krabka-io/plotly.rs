@@ -16,8 +16,10 @@ env:
 jobs:
   build:
     name: Build and deploy book
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@v4
       - name: Setup Chrome (for static_export)
         uses: browser-actions/setup-chrome@v1

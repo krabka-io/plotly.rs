@@ -8,8 +8,10 @@ on:
 jobs:
   create-crates-io-release:
     name: Deploy to crates.io
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+    - name: Keep temporary files off the size-limited /tmp tmpfs
+      run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
     - uses: actions/checkout@v4
     - uses: dtolnay/rust-toolchain@stable
     - run: cargo login ${{ env.CRATES_IO_TOKEN }}
@@ -31,6 +33,8 @@ jobs:
 
   create-gh-release:
     name: Deploy to GH Releases
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
+      - name: Keep temporary files off the size-limited /tmp tmpfs
+        run: echo "TMPDIR=${RUNNER_TEMP}" >> "${GITHUB_ENV}"
       - uses: softprops/action-gh-release@v1
