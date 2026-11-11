@@ -31,6 +31,8 @@ jobs:
 
   create-gh-release:
     name: Deploy to GH Releases
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
