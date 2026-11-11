@@ -302,6 +302,6 @@ jobs:
     needs: [rustfmt, clippy, semver, test, code-coverage, build_examples, build_wasm_examples, build_book, typos]
     runs-on: ubuntu-latest
     steps:
-      - uses: krabka-io/tooling/actions/gate@a42cceef18200f4f282ae5a090856f63125a12ff
+      - uses: krabka-io/tooling/actions/gate@1fb9d942c2def2fcfa20c19ed8ae8a7d8f220f65
         with:
           results: ${{ toJSON(needs) }}
