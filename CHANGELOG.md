@@ -1,3 +1,11 @@
+# Organization update - 2026-11-11
+
+- Adopt the shared krabka-io CI gate and validate merge queue groups.
+- Prepare `plotly_static` 0.1.1.
+- Prepare `plotly_kaleido` 0.13.7.
+- Prepare `plotly_derive` 0.14.2.
+- Prepare `plotly` 0.14.2.
+
 # Changelog
 All notable changes to this project will be documented in this file.
 

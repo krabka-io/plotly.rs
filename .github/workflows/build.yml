@@ -1,6 +1,7 @@
 name: Build&Test
 
 on:
+  merge_group:
   workflow_dispatch:
   pull_request:
     branches: [ main ]
@@ -201,7 +202,7 @@ jobs:
         with:
           components: llvm-tools-preview
       - uses: taiki-e/install-action@cargo-llvm-cov
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
 
   build_examples:
     name: Build Examples
@@ -274,3 +275,16 @@ jobs:
         run: .github/scripts/build-book-examples.sh ${{ github.workspace }}/examples
       - name: Build book 
         run: mdbook build docs/book
+
+  typos:
+    uses: ./.github/workflows/typos.yml
+
+  gate:
+    name: gate
+    if: always()
+    needs: [rustfmt, clippy, semver, test, code-coverage, build_examples, build_wasm_examples, build_book, typos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: krabka-io/tooling/actions/gate@a42cceef18200f4f282ae5a090856f63125a12ff
+        with:
+          results: ${{ toJSON(needs) }}
